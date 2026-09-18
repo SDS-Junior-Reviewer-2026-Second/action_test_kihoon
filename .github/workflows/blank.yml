@@ -37,7 +37,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          echo "integration-${{matrix.test_group}}"
+          
   build-2:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -74,8 +74,20 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+  integration:
+    needs: build-1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test_group: [1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integration
+        run: 
+          echo "integration-${{matrix.test_group}}"
+    
   Do:
-    needs: [build-1, build-2, build-3]
+    needs: [integration, build-2, build-3]
     runs-on: ubuntu-latest
 
     steps:
